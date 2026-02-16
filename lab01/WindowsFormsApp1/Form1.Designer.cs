@@ -31,11 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.labHeight = new System.Windows.Forms.Label();
             this.labAngle = new System.Windows.Forms.Label();
             this.labSpeed = new System.Windows.Forms.Label();
             this.panelSettings = new System.Windows.Forms.Panel();
+            this.btnClear = new System.Windows.Forms.Button();
             this.inputWeight = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.inputSize = new System.Windows.Forms.NumericUpDown();
@@ -94,6 +94,7 @@
             // panelSettings
             // 
             this.panelSettings.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.panelSettings.Controls.Add(this.btnClear);
             this.panelSettings.Controls.Add(this.inputWeight);
             this.panelSettings.Controls.Add(this.label2);
             this.panelSettings.Controls.Add(this.inputSize);
@@ -111,6 +112,18 @@
             this.panelSettings.Name = "panelSettings";
             this.panelSettings.Size = new System.Drawing.Size(507, 95);
             this.panelSettings.TabIndex = 3;
+            // 
+            // btnClear
+            // 
+            this.btnClear.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.btnClear.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnClear.Location = new System.Drawing.Point(412, 3);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(75, 46);
+            this.btnClear.TabIndex = 14;
+            this.btnClear.Text = "Очистить графики";
+            this.btnClear.UseVisualStyleBackColor = false;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // inputWeight
             // 
@@ -248,9 +261,9 @@
             // 
             this.btnLaunch.BackColor = System.Drawing.SystemColors.HighlightText;
             this.btnLaunch.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLaunch.Location = new System.Drawing.Point(417, 51);
+            this.btnLaunch.Location = new System.Drawing.Point(412, 52);
             this.btnLaunch.Name = "btnLaunch";
-            this.btnLaunch.Size = new System.Drawing.Size(75, 30);
+            this.btnLaunch.Size = new System.Drawing.Size(75, 40);
             this.btnLaunch.TabIndex = 3;
             this.btnLaunch.Text = "Запуск";
             this.btnLaunch.UseVisualStyleBackColor = false;
@@ -270,13 +283,6 @@
             this.chart.Location = new System.Drawing.Point(12, 113);
             this.chart.Name = "chart";
             this.chart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
-            series1.BorderWidth = 5;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.LabelBorderWidth = 3;
-            series1.Legend = "Legend1";
-            series1.Name = "Полет тела";
-            this.chart.Series.Add(series1);
             this.chart.Size = new System.Drawing.Size(837, 287);
             this.chart.TabIndex = 4;
             this.chart.Text = "chart";
@@ -373,6 +379,7 @@
         private System.Windows.Forms.NumericUpDown inputSize;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown inputWeight;
+        private System.Windows.Forms.Button btnClear;
     }
 }
 

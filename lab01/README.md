@@ -32,22 +32,10 @@
 
 ---
 
-Графики при разной точности:
+График при разной точности:
 
  - Точность 1
-![chart1](./images/chart1.png)
-
- - Точность 0.1
-![chart2](./images/chart2.png)
-
- - Точность 0.01
-![chart3](./images/chart3.png)
-
- - Точность 0.001
-![chart4](./images/chart4.png)
-
- - Точность 0.0001
-![chart5](./images/chart5.png)
+![image](./images/image.png)
 
 ---
 

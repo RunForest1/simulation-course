@@ -18,10 +18,17 @@ namespace WindowsFormsApp1
         }
 
         decimal t, x, y, v0, cosa, sina, dtValue, S, m, k, vx, vy;
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            chart.Series.Clear();
+        }
+
         // Постоянные
         const decimal g = 9.81M; // Ускорение свободного падение тела
         const decimal C = 0.15M; // Коэф. лобового сопротивления
         const decimal rho = 1.29M; // плотность воздуха
+        string currentSeriesName;
         private void btnLaunch_Click(object sender, EventArgs e)
         {
 
@@ -30,8 +37,8 @@ namespace WindowsFormsApp1
 
                 // Очищаем нашу таблицу с результатами
                 dataGridResults.Rows.Clear();
-                // Очищаем наш график для повторного запуска
-                chart.Series[0].Points.Clear();
+
+
                 t = 0; 
                 x = 0; 
                 y = inputHeight.Value;
@@ -53,7 +60,14 @@ namespace WindowsFormsApp1
                 vx = v0 * cosa;
                 vy = v0 * sina;
 
-                chart.Series[0].Points.AddXY(x, y);
+                // Создаем новый график при старте
+                currentSeriesName = $"dt = {dtValue:F4}";
+                var newSeries = new System.Windows.Forms.DataVisualization.Charting.Series(currentSeriesName);
+                newSeries.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+                newSeries.BorderWidth = 3;
+                chart.Series.Add(newSeries);
+
+                newSeries.Points.AddXY(x, y);
                 timer1.Start();
 
             }
@@ -75,7 +89,7 @@ namespace WindowsFormsApp1
 
             if (y > maxHeight) maxHeight = y;
 
-            chart.Series[0].Points.AddXY(x, y);
+            chart.Series[currentSeriesName].Points.AddXY(x, y);
             if (y <= 0) {
                 timer1.Stop();
                 range = x;
