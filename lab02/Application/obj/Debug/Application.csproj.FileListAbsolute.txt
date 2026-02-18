@@ -1,0 +1,10 @@
+D:\Project\Project for ins\simulation-course\lab02\Application\obj\Debug\Application.csproj.AssemblyReference.cache
+D:\Project\Project for ins\simulation-course\lab02\Application\obj\Debug\Application.Properties.Resources.resources
+D:\Project\Project for ins\simulation-course\lab02\Application\obj\Debug\Application.csproj.GenerateResource.cache
+D:\Project\Project for ins\simulation-course\lab02\Application\obj\Debug\Application.csproj.CoreCompileInputs.cache
+D:\Project\Project for ins\simulation-course\lab02\Application\bin\Debug\Application.exe.config
+D:\Project\Project for ins\simulation-course\lab02\Application\bin\Debug\Application.exe
+D:\Project\Project for ins\simulation-course\lab02\Application\bin\Debug\Application.pdb
+D:\Project\Project for ins\simulation-course\lab02\Application\obj\Debug\Lab2.Form1.resources
+D:\Project\Project for ins\simulation-course\lab02\Application\obj\Debug\Application.exe
+D:\Project\Project for ins\simulation-course\lab02\Application\obj\Debug\Application.pdb
