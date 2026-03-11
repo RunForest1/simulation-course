@@ -16,12 +16,13 @@ const App: React.FC = () => {
     setIsCalculating(true);
 
     setTimeout(() => {
+      // Зерно берем дату сейчас 
       const seed = Date.now();
 
       // Кастомный генератор
       const customRng = new CustomRNG(seed);
       const customValues = new Array(SAMPLE_SIZE);
-      let t0 = performance.now();
+      let t0 = performance.now(); // Таймер
       for (let i = 0; i < SAMPLE_SIZE; i++) {
         customValues[i] = customRng.next();
       }

@@ -12,7 +12,7 @@ export class CustomRNG {
     if (this.seed <= 0) this.seed += 1;
   }
 
-  // xi+1 =(β⋅xi)modM)
+  // xi+1 =(β⋅xi)modM) формула датчика
   next(): number {
     this.seed = (this.a * this.seed) % this.m;
     return this.seed / this.m;
