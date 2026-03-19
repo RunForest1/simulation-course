@@ -15,6 +15,27 @@ interface Props {
 }
 
 export const StatisticsTable: React.FC<Props> = ({ data }) => {
+
+    const content = `${data.map((row) => (
+        `${row.state}\n
+        --${row.empirical.toFixed(4)}\n
+        --${row.theoretical.toFixed(4)}\n
+        --${row.error.toFixed(4)}\n`
+
+    ))
+        }`
+    console.log(content);
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = 'results.txt'
+
+
+    document.body.appendChild(link);
+    link.click();
+
     return (
         <div className="lg:col-span-2 overflow-x-auto">
             <table className="w-full text-sm">

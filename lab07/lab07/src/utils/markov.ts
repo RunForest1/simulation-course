@@ -1,6 +1,7 @@
 import { TRANSITION_MATRIX, type WeatherState } from "../types/weather";
 
 
+
 export const getNextState = (currentState: WeatherState): WeatherState => {
   const row = TRANSITION_MATRIX[currentState - 1];
   const rand = Math.random();
@@ -12,6 +13,7 @@ export const getNextState = (currentState: WeatherState): WeatherState => {
       return (i + 1) as WeatherState;
     }
   }
+
   return currentState;
 };
 
