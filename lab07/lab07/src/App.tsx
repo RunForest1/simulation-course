@@ -14,7 +14,7 @@ export default function App() {
   const [stats, setStats] = useState<[number, number, number]>([0, 0, 0]);
 
   const timerRef = useRef<number | null>(null);
-  const speed = 800;
+  const speed = 1000;
 
   // Теоретическое распределение (вычисляем один раз при монтировании)
   const theoreticalDist = useMemo(() => calculateStationaryDistribution(), []);
