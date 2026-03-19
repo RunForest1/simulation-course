@@ -8,14 +8,15 @@ import {
   type NormalStats
 } from './utils/stats';
 
-// Импорт компонентов для Части 1 (ДСВ)
+// Импорт компонентов для  (ДСВ)
 import { DistributionInput } from './components/DistributionInput';
 import { StatsSummary } from './components/StatsSummary';
 import { ResultsTable } from './components/ResultsTable';
 import { Conclusion } from './components/Conclusion';
 
-// Импорт компонента для Части 2 (Нормальное распределение)
+// Импорт компонента для (Нормальное распределение)
 import { NormalHistogram } from './components/NormalHistogram';
+import { DiscreteDistributionChart } from './components/DiscreteDistributionChart';
 
 const INITIAL_DIST: DistributionItem[] = [
   { value: 1, probability: 0.264 },
@@ -26,20 +27,21 @@ const INITIAL_DIST: DistributionItem[] = [
 ];
 
 const App: React.FC = () => {
-  // ============================
-  // Состояние для Части 1: ДСВ
-  // ============================
+  // Состояние для ДСВ
   const [distribution, setDistribution] = useState<DistributionItem[]>(INITIAL_DIST);
   const [results, setResults] = useState<ExperimentResult[] | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
 
-  // ============================
-  // Состояние для Части 2: Нормальное распределение
-  // ============================
+  // Состояние для Нормальное распределение
   const [normalResults, setNormalResults] = useState<Record<number, NormalStats> | null>(null);
   const [isNormalCalculating, setIsNormalCalculating] = useState(false);
 
-  // Обработчик изменения вероятностей с нормализацией (Часть 1)
+  // Поля состояния для параметров нормального распределения
+  const [normalMean, setNormalMean] = useState<string>('0');
+  const [normalVariance, setNormalVariance] = useState<string>('1');
+  const [binCount, setBinCount] = useState<string>('20');
+
+  // Обработчик изменения вероятностей с нормализацией 
   const handleProbChange = (index: number, val: string) => {
     const newDist = [...distribution];
     const prob = parseFloat(val);
@@ -61,7 +63,7 @@ const App: React.FC = () => {
     }
   };
 
-  // Запуск эксперимента для ДСВ (Часть 1)
+  // Запуск эксперимента для ДСВ 
   const startSimulation = () => {
     setIsCalculating(true);
     setTimeout(() => {
@@ -71,21 +73,32 @@ const App: React.FC = () => {
     }, 50);
   };
 
-  // Запуск эксперимента для нормального распределения (Часть 2)
+  // Запуск эксперимента для нормального распределения 
   const startNormalSimulation = () => {
+    const mu = parseFloat(normalMean);
+    const variance = parseFloat(normalVariance);
+    const bins = parseInt(binCount);
+
+    if (isNaN(mu) || isNaN(variance) || isNaN(bins) || variance <= 0 || bins <= 0) {
+      alert("Пожалуйста, введите корректные числовые значения. Дисперсия и количество бинов должны быть больше 0.");
+      return;
+    }
+
+    const sigma = Math.sqrt(variance);
+
     setIsNormalCalculating(true);
     setTimeout(() => {
       const ns = [10, 100, 1000, 10000];
       const results: Record<number, NormalStats> = {};
       ns.forEach(n => {
-        results[n] = runNormalExperiment(n, 0, 1); // N(0, 1)
+        results[n] = runNormalExperiment(n, mu, sigma, bins);
       });
       setNormalResults(results);
       setIsNormalCalculating(false);
     }, 100);
   };
 
-  // Теоретические характеристики для ДСВ (мемоизация)
+  // Теоретические характеристики для ДСВ
   const theoreticalStats = useMemo(() => calculateTheoreticalStats(distribution), [distribution]);
   const totalProb = distribution.reduce((acc, i) => acc + i.probability, 0);
 
@@ -93,9 +106,6 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-12">
 
-        {/* ============================
-            ОБЩИЙ ЗАГОЛОВОК ЛАБОРАТОРНОЙ
-            ============================ */}
         <header className="mb-6 border-b border-slate-200 pb-4">
           <h1 className="text-2xl md:text-3xl font-bold text-indigo-900">
             Лабораторная 6: Моделирование случайных величин
@@ -136,6 +146,8 @@ const App: React.FC = () => {
           {results && (
             <div className="space-y-6 animate-fade-in-up">
               <ResultsTable results={results} />
+              {/* Добавляем график для дискретного распределения */}
+              <DiscreteDistributionChart results={results} distribution={distribution} />
               <Conclusion />
             </div>
           )}
@@ -154,35 +166,70 @@ const App: React.FC = () => {
             </h2>
           </div>
 
-          {/* Панель управления для нормальной величины */}
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <p className="text-slate-600 mb-4">
-              Генерация нормально распределенной величины <strong>N(0, 1)</strong> методом Бокса-Мюллера.
+              Генерация нормально распределенной величины методом Бокса-Мюллера.
               Построение гистограмм и проверка гипотезы о нормальности распределения с помощью критерия χ².
             </p>
-            <div className="flex flex-wrap gap-4 items-center">
-              <div className="text-sm text-slate-500">
-                Параметры: μ = 0, σ = 1, количество бинов = 20
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+              <div>
+                <label htmlFor="mean-input" className="block text-sm font-medium text-slate-700 mb-1">
+                  Среднее (μ)
+                </label>
+                <input
+                  id="mean-input"
+                  type="number"
+                  step="any"
+                  value={normalMean}
+                  onChange={(e) => setNormalMean(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
               </div>
-              <button
-                onClick={startNormalSimulation}
-                disabled={isNormalCalculating}
-                className={`px-6 py-2.5 rounded-lg font-semibold text-white shadow-md transition-all ${isNormalCalculating
-                    ? 'bg-slate-400 cursor-not-allowed'
-                    : 'bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg'
-                  }`}
-              >
-                {isNormalCalculating ? 'Расчет...' : 'Смоделировать'}
-              </button>
+              <div>
+                <label htmlFor="variance-input" className="block text-sm font-medium text-slate-700 mb-1">
+                  Дисперсия (σ²)
+                </label>
+                <input
+                  id="variance-input"
+                  type="number"
+                  step="any"
+                  value={normalVariance}
+                  onChange={(e) => setNormalVariance(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+              <div>
+                <label htmlFor="bins-input" className="block text-sm font-medium text-slate-700 mb-1">
+                  Кол-во гистограмм
+                </label>
+                <input
+                  id="bins-input"
+                  type="number"
+                  min="1"
+                  value={binCount}
+                  onChange={(e) => setBinCount(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
             </div>
+
+            <button
+              onClick={startNormalSimulation}
+              disabled={isNormalCalculating}
+              className={`w-full sm:w-auto px-6 py-2.5 rounded-lg font-semibold text-white shadow-md transition-all ${isNormalCalculating
+                  ? 'bg-slate-400 cursor-not-allowed'
+                  : 'bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg'
+                }`}
+            >
+              {isNormalCalculating ? 'Расчет...' : 'Смоделировать'}
+            </button>
           </div>
 
-          {/* Результаты: гистограммы */}
           {normalResults && (
             <div className="space-y-6 animate-fade-in-up">
               <h3 className="font-medium text-slate-700">Гистограммы распределения при разных объёмах выборки:</h3>
 
-              {/* Сетка 2×2 для гистограмм */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[10, 100, 1000, 10000].map(n => (
                   <NormalHistogram
@@ -194,15 +241,14 @@ const App: React.FC = () => {
                 ))}
               </div>
 
-              {/* Вывод по второй части */}
               <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-6">
                 <h4 className="font-bold text-emerald-900 mb-2">Вывод:</h4>
                 <p className="text-emerald-800 text-sm leading-relaxed">
                   При малых <strong>N</strong> (10, 100) гистограмма имеет нерегулярную форму,
                   существенно отличающуюся от теоретической кривой Гаусса.
                   С ростом <strong>N</strong> (до 1000 и 10000) эмпирическое распределение всё точнее
-                  аппроксимирует нормальный закон: выборочные характеристики сходятся к теоретическим
-                  (μ=0, σ²=1), а критерий χ² подтверждает гипотезу о нормальности.
+                  аппроксимирует нормальный закон: выборочные характеристики сходятся к теоретическим,
+                  а критерий χ² подтверждает гипотезу о нормальности.
                   Это демонстрирует действие <strong>центральной предельной теоремы</strong>
                   и корректность метода Бокса-Мюллера.
                 </p>
